@@ -95,9 +95,47 @@ class SortingRobot:
     def sort(self):
         """
         Sort the robot's list.
+
+        Since we cannot save any values, we are limited to comparison sorting 
+        algorithms that only need to look at whatever is next to an item. Both 
+        bubble sort, and insertion sort, and selection sort, all seem to be 
+        appropriate. 
+
+        I have the strongest grasp of selection sort, and it seemed to be the 
+        most straightforward to implement
         """
-        # Fill this out
-        pass
+
+        # pick up the first item in list (i[0] = None) and set our indicator to "ON"
+        self.swap_item()
+        self.set_light_on()
+
+        # Our light will be our "sorted" indicator, when we determine our list 
+        # is sorted, we turn it off and exit the loop
+        while self.light_is_on():
+            # our list is sorted when we cannot move right, and the farthest right equals None
+            if not self.can_move_right() and self.compare_item() == None:
+                # put the item we're holding back into the list
+                self.swap_item()
+                self.set_light_off()
+                # since we know our list is sorted, either a break or return works here
+                break
+
+            while self.move_right():
+                # if what we are holding is greater than what is to the right
+                # we swap, and continue moving right, this loop breaks when we 
+                # have searched the entire array, and are holding the smallest value
+                if self.compare_item() == 1:
+                    self.swap_item()
+
+            while self.move_left():
+                # finally we move back left until we find None, empty spot and swap with the
+                # next smallest item we're holding. Then pick up the next unsorted item (i+1)
+                # and continue the traversal right (above)
+                if self.compare_item() == None:
+                    self.swap_item()
+                    self.move_right()
+                    self.swap_item()
+                    break
 
 
 if __name__ == "__main__":
